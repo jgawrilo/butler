@@ -1,7 +1,15 @@
 var socket;
 
-d3.select("#export").on("click",function(x){
-    $.get("http://localhost:5000/save_export/", function() {
+
+var server = "http://localhost:5000/"
+
+// EXPORT CALL!!!!
+d3.select("#export").on("click",function(){
+    var endpoint = server + "save_export"
+    $.get(endpoint, function(response) {
+        var response = JSON.parse(response);
+        console.log(response);
+        console.log("Tell the user where data has been saved...")
     });
 });
 

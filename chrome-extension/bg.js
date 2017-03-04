@@ -1,6 +1,6 @@
 var prefs = {};
 
-chrome.storage.local.get({callback: 'http://localhost:8080', key: 'chrome'}, function(o) { prefs = o; });
+chrome.storage.local.get({callback: 'http://localhost:5000/browser_action/', key: 'chrome'}, function(o) { prefs = o; });
 
 chrome.storage.onChanged.addListener(function(changes) {
     for (key in changes) {
@@ -9,14 +9,11 @@ chrome.storage.onChanged.addListener(function(changes) {
 });
 
 function log(url, title, favicon){
-    var data = JSON.stringify({
+    var data = {
         url: url, time: Date.now(),
-        title: title, key: prefs.key,
-        favicon: favicon
-    });
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", prefs.callback);
-    xhr.send(data);
+        title: title, key: prefs.key
+    };
+    $.post( prefs.callback, data );
 }
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {
