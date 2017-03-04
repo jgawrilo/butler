@@ -1,0 +1,43 @@
+<!DOCTYPE html 
+      PUBLIC "-//W3C//DTD HTML 4.01//EN"
+      "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en-US"> 
+ <head>
+    <title>Datafy</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+ </head>
+ <body>
+<button type="button" class="btn btn-primary">Clear/Start New </button>
+<button type="button" id="export" class="btn btn-success">Save/Export</button>
+<button type="button" id="reload" class="btn btn-warning">Reload</button>
+<div>
+    <div><b>Prompts</b><br>
+    Is this page relevant (yes/no)?
+    </div>
+    <br>
+    <b>Google Results</b>
+    <ul id="google_results"></ul>
+    <b>Pages</b>
+    <img src="website.png" width="200px" height="100px">
+    <ul id="visited_pages"></ul>
+    <div id="container" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+    <b>Related Info</b>
+    <div id="terms"></div>
+        
+    </div>
+    <b>Social Media</b>
+    <ul id="social_media"></ul>
+</div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+    <script src="./mine.js" charset="utf-8"></script>
+    
+
+
+ </body>
+</html>

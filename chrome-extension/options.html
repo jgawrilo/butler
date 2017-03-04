@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Webpage Logger Options</title>
+    <style>
+        body { font-family: "Droid Sans", sans-serif; color: #333; }
+        input { transition: border-color 0.3s; border: 1px solid #ccc; padding: 0.2em }
+        input:focus { border: 1px solid #66AFE9; outline: none; }
+        .logo { float: left; margin-right: 1em; }
+        h2 { margin: 0; padding: 0; margin-bottom: 0.1em; }
+        p { margin:0; padding: 0; }
+        header { border-bottom: 1px solid #ccc; padding-bottom: 0.5em; margin-bottom: 1em }
+        main { padding-left: 1em; }
+        a { text-decoration: none; color: #428BCA}
+        a:hover {text-decoration: underline; color: #2A6496}
+        hr { border: none; border-bottom: 1px solid #ccc;}
+        form {display: table; margin-left: 2em}
+        em.info {color: #777}
+    </style>
+</head>
+<body>
+<header>
+<img class="logo" src="d48.png"/><br>
+<h2>Datafy</h2>
+</header>
+<main>
+<h3>Options</h3>
+<form>
+<p>
+<label for=callback>Service URL</label>: <input id="callback" type="text" spellcheck="false"><br/>
+<em class=info>URL to be notified of user actions and data.</em>
+</p>
+<hr/>
+<p>
+<label for=key> Person Key:</label> <input id="key" type="text" spellcheck="false"><br/>
+<em class=info>Key to identify the person.</em>
+</p>
+</main>
+<script src='options.js'></script>
+
+</body>
+</html>

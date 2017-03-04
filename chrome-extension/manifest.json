@@ -1,0 +1,29 @@
+{
+    "name": "Datafy",
+    "author": "Justin Gawrilow <justin.gawrilow@gmail.com",
+    "version": "0.1",
+    "description": "KYC Prototype",
+    "homepage_url": "http://www.jataware.com",
+    "icons": {
+        "16": "d16.png",
+        "32": "d32.png",
+        "48": "d48.png",
+        "128": "d128.png"
+    },
+    "manifest_version": 2,
+    "content_scripts": [
+        {
+          "matches": ["https://*/*","http://*/*"],
+          "js": ["external/socket.io.js","external/jquery-3.1.1.min.js","myscript.js"],
+          "run_at":"document_end"
+        }
+    ],
+    "background": {
+        "scripts": ["external/jquery-3.1.1.min.js","bg.js"]
+    },
+    "permissions": [
+        "tabs",
+        "storage"
+    ],
+    "options_page": "options.html"
+}
