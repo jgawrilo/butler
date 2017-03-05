@@ -42,7 +42,45 @@ terms_hash = {}
 nlp = spacy.load('en')
 urls_to_content = {}
 
+action_count = 0
+
 socketIO = SocketIO('localhost', 3000, LoggingNamespace)
+
+
+# Called when a prompt is answered
+@app.route('/answer/', methods=['GET'])
+def handle_answer():
+    print "GET: Answer"
+    print request.args.get("id"), request.args.get("response")
+    resp = Response(dumps({"ok":"cool"}))
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+# Called when something is unliked
+@app.route('/unlike/', methods=['GET'])
+def handle_unlike():
+    print "GET: Unlike"
+    print request.args.get("id")
+    resp = Response(dumps({"ok":"cool"}))
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+# Called when clear is clicked
+@app.route('/clear/', methods=['GET'])
+def handle_clear():
+    print "GET: Clear"
+    resp = Response(dumps({"ok":"cool"}))
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+
+# Called when reload is clicked
+@app.route('/reload/', methods=['GET'])
+def handle_reload():
+    print "GET: Reload"
+    resp = Response(dumps({"ok":"cool"}))
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
 
 # Called when save/export is clicked
 @app.route('/save_export/', methods=['GET'])
@@ -61,6 +99,32 @@ def handle_brower_action():
     date = datetime.utcfromtimestamp(int(data["time"]) / 1000.)
     data["time"] = date.isoformat("T").split(".")[0]
     del data["key"]
+
+    global action_count
+
+    action_count += 1
+
+    print "ACTION COUNT:", action_count
+
+    if action_count % 10 == 0:
+        socketIO.emit('prompt',dumps(
+            {"question":"Is this person of interest?",
+            "id":"q"+str(action_count),
+            "image_url":"https://instagram.fphl1-1.fna.fbcdn.net/t51.2885-19/11371180_804405839674055_1031223292_a.jpg",
+            "page_url":None}
+            )
+        )
+        action_count += 1
+
+    if action_count % 20 == 0:
+        socketIO.emit('prompt',dumps(
+            {"question":"Is this page relevant?",
+            "id":"q"+str(action_count),
+            "image_url":None,
+            "page_url":"https://reviews.birdeye.com/virginia-dental-care-691679936"}
+            )
+        )
+        action_count += 1
 
     # If it's a site or movement we don't care about, do nothing
     if data["url"] == None or data["url"] == "" or data["url"].startswith("http://localhost:3000/") or \
@@ -88,8 +152,8 @@ def handle_brower_action():
             except IndexError:
                 print "---No search term found---"
                 return "ok"
-        print "Term ->", q
-        socketIO.emit('google_search',dumps({"q":q}))
+        print "Query ->", q
+        socketIO.emit('google_search',dumps({"q":q, "id":"g"+str(action_count)}))
         #urls = self.server.google_scrape(q,self.server.social_mappings,self.server.urls_to_content)
         #embedding = self.server.embed(urls)
         #embed_json = map(lambda x: {"url":x[0],"x":x[1],"y":x[2]},embedding)
@@ -249,7 +313,6 @@ def google_scrape(term,mapping,urls_to_content):
 
 if __name__ == "__main__":
     app.debug=True
-    print "Server running..."
     app.run(threaded=True,
         host="0.0.0.0",
         port=(5000))

@@ -28,6 +28,10 @@ io.on('connection', function(socket){
     console.log("Export!!");
     io.emit('export', msg);
   });
+  socket.on('prompt', function(msg){
+    console.log("Prompt!!");
+    io.emit('prompt', msg);
+  });
   socket.on('google_link', function(msg){
     console.log("here!")
     console.log(msg);

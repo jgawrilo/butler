@@ -3,15 +3,55 @@ var socket;
 
 var server = "http://localhost:5000/"
 
-// EXPORT CALL!!!!
+// EXPORT CALL
 d3.select("#export").on("click",function(){
-    var endpoint = server + "save_export"
+    var endpoint = server + "save_export/"
     $.get(endpoint, function(response) {
         var response = JSON.parse(response);
         console.log(response);
         console.log("Tell the user where data has been saved...")
     });
 });
+
+// CLEAR CALL
+d3.select("#clear").on("click",function(){
+    var endpoint = server + "clear/"
+    $.get(endpoint, function(response) {
+        var response = JSON.parse(response);
+        console.log(response);
+        console.log("Remove everythng from the UI...Prompt them for a new name?")
+    });
+});
+
+// RELOAD
+d3.select("#reload").on("click",function(){
+    var endpoint = server + "reload/"
+    $.get(endpoint, function(response) {
+        var response = JSON.parse(response);
+        console.log(response);
+        console.log("Either show what files already exist or prompt for the file...")
+    });
+});
+
+// UNLIKE...in this case it's always a zero we send back
+function unlike(id){
+    var endpoint = server + "unlike/"
+    $.get(endpoint, {"id":id,"response":0}, function(response) {
+        var response = JSON.parse(response);
+        console.log(response);
+        console.log("Either show what files already exist or prompt for the file...")
+    });
+}
+
+// UNLIKE...in this case it's always a zero we send back
+function answerPrompt(id,answer){
+    var endpoint = server + "answer/"
+    $.get(endpoint, {"id":id,"response":answer}, function(response) {
+        var response = JSON.parse(response);
+        console.log(response);
+        console.log("Remove the prompt from the UI...")
+    });
+}
 
 var chart = Highcharts.chart('container', {
     chart: {
@@ -242,48 +282,77 @@ chart.series[1].update({name: 'People Info',
     }, true); //true / false to redraw
 },5000);
 
+function receiveGoogleSearch(data){
+    d3.select("#google_results").append("div").text(data.q).append("input").attr("type","checkbox").attr("id","i"+data.id)
+    .property('checked', true).on("change",function(){
+        unlike(this.id);
+    });
+}
+
+function receivePrompt(data){
+    if(data.image_url){
+        d3.select("#prompts").append("div").attr("id","d"+data.id).text(data.question).append("img").attr("src",data.image_url);
+    }
+    else{
+        d3.select("#prompts").append("div").attr("id","d"+data.id).append("a").attr("href",data.page_url)
+        .attr("target","_blank").text(data.question);
+    }
+    d3.select("#d" + data.id).append("button").attr("id",data.id).attr("type","button").classed("btn btn-success",true).text("Yes")
+    .on("click",function(){
+        answerPrompt(this.id,1);
+        d3.select("#d"+data.id).remove();
+    });
+    d3.select("#d" + data.id).append("button").attr("id",data.id).attr("type","button").classed("btn btn-danger",true).text("No")
+    .on("click",function(){
+        answerPrompt(this.id,0);
+        d3.select("#d"+data.id).remove();
+    });
+}
 
 
-function update(data) {
-  var text = d3.select("#terms").selectAll("div")
+function receiveUpdatedRelatedTerms(data) {
+    var text = d3.select("#terms").selectAll("div")
     .data(data.terms);
 
-  // UPDATE
-  // Update old elements as needed.
-  text.attr("class", "term");
-
-  text.enter().append("div").attr("class","term").merge(text).text(function(d){return d.term});
-
-  text.exit().remove();
+    text.attr("class", "term");
+    text.enter().append("div").attr("class","term").merge(text).text(function(d){return d.term});
+    text.exit().remove();
 }
+
       socket = io();
+
       socket.on('terms', function(msg){
+        console.log("Received Updated Related Terms")
         msg = JSON.parse(msg);
         console.log(msg);
-        update(msg);
-        //<label class="checkbox-inline"><input type="checkbox" value="">Option 1</label>
+        receiveUpdatedRelatedTerms(msg);
       });
+
       socket.on('new_page', function(msg){
-        msg = JSON.parse(msg);
-        console.log(msg.id);
-        d3.select("#visited_pages").insert("li",":first-child").attr("id",msg.id).text(msg.url + " " + msg.count);
-      });
-      socket.on('old_page', function(msg){
+        console.log("Received New Page of Note Hit");
         msg = JSON.parse(msg);
         console.log(msg);
-        d3.select("#"+msg.id).remove();
-        d3.select("#visited_pages").insert("li",":first-child").attr("id",msg.id).text(msg.url + " " + msg.count);
+        d3.select("#visited_pages").insert("div",":first-child").attr("id",msg.id).text(msg.url + " " + msg.count);
       });
+
+      socket.on('prompt', function(msg){
+        console.log("Received Prompt");
+        msg = JSON.parse(msg);
+        console.log(msg);
+        receivePrompt(msg);
+      });
+
       socket.on('google_search', function(msg){
+        console.log("Received Google Search Page Hit");
         msg = JSON.parse(msg);
-        $('#google_results').prepend($('<li>').text(msg.q));
-        //$('#messages').append($('<li><b>').text(msg));
-        //go(JSON.parse(msg))
-        //console.log(msg);
-        //$('body').append($('<li><b>').text(msg));
+        console.log(msg);
+        receiveGoogleSearch(msg);
       });
+
       socket.on('social_media', function(msg){
+        console.log("Received Social Media Page Hit");
         msg = JSON.parse(msg);
-        $('#social_media').prepend($('<li>').text(msg.account));
+        console.log(msg);
+        d3.select("#social_media").append("div").text(msg.account);
       });
-      //setTimeout(function(){socket.emit('chat message',"yo yo");},3000);
+
