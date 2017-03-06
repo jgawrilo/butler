@@ -4,17 +4,17 @@ https://drive.google.com/open?id=0B7__u9BeTQu_UC1wYTk4YmhXMUE
 
 clone the repo
 
-To install chrome browser plugin...
+# To install chrome browser plugin
 1. Go to extensions.
 2. Load upacked extension.
 3. Select the chrome-extension directory
 
-To run the socket server and run Butler...
+# To run the socket server and run Butler...
 1. Navigate to server directory
 2. npm install
 3. Go go http://localhost:3000/index2.html
 
-To run the data server...
+# To run the data server...
 1. Nativate to contrib directory
 2. pip install -r requirements.txt
 3. python server2.py
