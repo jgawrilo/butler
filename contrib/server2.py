@@ -19,7 +19,6 @@ import urllib
 import spacy
 import re
 import html2text
-import tldextract
 from sklearn.decomposition import PCA
 
 from elasticsearch import Elasticsearch

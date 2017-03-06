@@ -1,0 +1,15 @@
+flask
+socketIO_client
+google
+urlparse
+beautifulsoup4
+sklearn
+tsne
+nltk
+requests
+spacy
+re
+html2text
+elasticsearch
+codecs
+numpy
