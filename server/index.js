@@ -6,9 +6,6 @@ var io = require('socket.io')(http);
 app.use("/", express.static(__dirname + '/public'));
 
 io.on('connection', function(socket){
-  socket.on('old_page', function(msg){
-    io.emit('old_page', msg);
-  });
   socket.on('terms', function(msg){
     io.emit('terms', msg);
   });
@@ -25,17 +22,16 @@ io.on('connection', function(socket){
     io.emit('dark_search', msg);
   });
   socket.on('export', function(msg){
-    console.log("Export!!");
     io.emit('export', msg);
   });
   socket.on('prompt', function(msg){
-    console.log("Prompt!!");
     io.emit('prompt', msg);
   });
   socket.on('google_link', function(msg){
-    console.log("here!")
-    console.log(msg);
     io.emit('google_link', msg);
+  });
+  socket.on('page_update', function(msg){
+    io.emit('page_update', msg);
   });
 
 });
