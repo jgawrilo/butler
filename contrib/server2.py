@@ -8,7 +8,7 @@ import urlparse
 from bs4 import BeautifulSoup
 from sklearn.feature_extraction import FeatureHasher
 from sklearn import preprocessing
-from tsne import bh_sne
+#from tsne import bh_sne
 from nltk.tokenize import word_tokenize
 import urlparse
 import urllib2
