@@ -234,19 +234,18 @@ def handle_brower_action():
         return "ok"
 
 
-    elif data["url"] in url_dict:
+    elif data["url"] in url_dict and url_dict[data["url"]]["viewed"]:
         print "Old URL ->", data["url"]
-        url_dict[data["url"]]["view_count"] += 1
-        url_dict[data["url"]]["last_seen"] = int(time.mktime(datetime.now().timetuple()))
         if last_url != None:
             view_time = int(time.mktime(datetime.now().timetuple())) - url_dict[last_url]["last_seen"]
             url_dict[last_url]["view_time_seconds"] += view_time
             url_dict[last_url]["last_seen"] = int(time.mktime(datetime.now().timetuple()))
             print last_url, "was viewed", url_dict[last_url]["view_time_seconds"]
         last_url = data["url"]
+        new_url(data["url"])
 
     # If it's a new site...
-    elif data["url"] not in url_dict:
+    elif data["url"] not in url_dict or not url_dict[data["url"]]["viewed"]:
         new_url(data["url"])
 
 
@@ -260,18 +259,16 @@ def new_url(url,send_to_client=True):
         view_time = int(time.mktime(datetime.now().timetuple())) - url_dict[last_url]["last_seen"]
         url_dict[last_url]["view_time_seconds"] += view_time
         url_dict[last_url]["last_seen"] = int(time.mktime(datetime.now().timetuple()))
-        print last_url, "was viewed", url_dict[last_url]["view_time_seconds"]
-
 
     last_url = url
-    print "-- New Page --"
-    pid = "page" + str(len(url_dict))
-    screen_shot_loc = "screenshots/"+pid+".png"
-    text = do_webpage(url,pid,True)
-
-    urls_to_content[url] = text
-
-    page = {
+    
+    if url not in url_dict:
+        print "-- New Page --"
+        pid = "page" + str(len(url_dict))
+        screen_shot_loc = "screenshots/"+pid+".png"
+        text = do_webpage(url,pid,True)
+        urls_to_content[url] = text
+        page = {
             "url":url,
             "screen_shot_url":screen_shot_loc,
             "view_time_seconds":0,
@@ -283,10 +280,18 @@ def new_url(url,send_to_client=True):
             "x":None,
             "y":None,
             "relevance_score":0.5
-    }
+        }
 
-    print "adding", url, "to dict"
-    url_dict[url] = page
+        print "adding", url, "to dict"
+        url_dict[url] = page
+    else:
+        print "-- Old Page -- Updating..."
+        pid = url_dict[url]["id"]
+        screen_shot_loc = url_dict[url]["screen_shot_url"]
+        text = urls_to_content[url]
+        url_dict[url]["view_count"] += 1
+        url_dict[url]["viewed"] = True
+        url_dict[url]["last_seen"] = int(time.mktime(datetime.now().timetuple()))
 
     if send_to_client:
         socketIO.emit('new_page',dumps(url_dict[url]))
@@ -418,7 +423,7 @@ def google_scrape(term):
         try:
             pid = "page" + str(len(url_dict))
             screen_shot_loc = "screenshots/"+pid+".png"
-            text = do_webpage(url,pid,screenshot=False)
+            text = do_webpage(url,pid,screenshot=True)
 
             page = {
                     "url":url,
