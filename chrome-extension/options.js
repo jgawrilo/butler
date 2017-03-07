@@ -6,7 +6,7 @@ function save() {
 
 function restore_options() {
     chrome.storage.local.get({
-        callback: 'http://localhost:5000/browser_action/',
+        callback: 'https://localhost:5000/browser_action/',
         key: 'chrome'
     }, function(options) {
         document.getElementById('callback').value = options.callback;

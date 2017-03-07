@@ -1,6 +1,6 @@
 var prefs = {};
 
-chrome.storage.local.get({callback: 'http://localhost:5000/browser_action/', key: 'chrome'}, function(o) { prefs = o; });
+chrome.storage.local.get({callback: 'https://localhost:5000/browser_action/', key: 'chrome'}, function(o) { prefs = o; });
 
 chrome.storage.onChanged.addListener(function(changes) {
     for (key in changes) {

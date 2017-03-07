@@ -1,14 +1,14 @@
 {
-    "name": "Datafy",
+    "name": "Butler",
     "author": "Justin Gawrilow <justin.gawrilow@gmail.com",
     "version": "0.1",
     "description": "KYC Prototype",
     "homepage_url": "http://www.jataware.com",
     "icons": {
-        "16": "d16.png",
-        "32": "d32.png",
-        "48": "d48.png",
-        "128": "d128.png"
+        "16": "b16.png",
+        "32": "b32.png",
+        "48": "b48.png",
+        "128": "b128.png"
     },
     "manifest_version": 2,
     "content_scripts": [

@@ -30,6 +30,13 @@ import os
 
 app = Flask(__name__)
 
+from OpenSSL import SSL
+
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+
 # Social Sites
 social_mappings = [{"site":"LINKEDIN","urls":["https://www.linkedin.com/in/"]},
     {"site":"INSTAGRAM","urls":["https://www.instagram.com/"]},
@@ -51,11 +58,24 @@ socials = {}
 
 action_count = 0
 
+last_url = None
+
 name = ""
 
 socketIO = SocketIO('localhost', 3000, LoggingNamespace)
 
 success = {"success":True}
+
+# Called when instagram is scraped...
+@app.route('/instagram/', methods=['GET'])
+def handle_instagram():
+    print "GET: Instagram"
+    handle = request.args.get("handle")
+    print handle
+    os.system("python mine_insta.py " + handle)
+    resp = Response(dumps(success))
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
 
 
 # Called when a prompt is answered
@@ -116,7 +136,10 @@ def handle_save():
 @app.route('/browser_action/', methods=['POST'])
 def handle_brower_action():
     global action_count
+    global last_url
     action_count += 1
+
+    print "LAST URL:", last_url
 
     data = request.form.to_dict()
     date = datetime.utcfromtimestamp(int(data["time"]) / 1000.)
@@ -153,6 +176,13 @@ def handle_brower_action():
     if data["url"] == None or data["url"] == "" or data["url"].startswith("http://localhost:3000/") or \
     data["url"] == "chrome://newtab/" or data["url"] == "chrome://extensions/" or \
     data["url"].startswith("https://mail.google.com/"):
+        # Change time of last URL
+        if last_url != None:
+            view_time = int(time.mktime(datetime.now().timetuple())) - url_dict[last_url]["last_seen"]
+            url_dict[last_url]["view_time_seconds"] += view_time
+            url_dict[last_url]["last_seen"] = int(time.mktime(datetime.now().timetuple()))
+            print last_url, "was viewed", url_dict[last_url]["view_time_seconds"]
+        last_url = None
         return "nothing"
 
     # If it's a social site...
@@ -207,6 +237,13 @@ def handle_brower_action():
     elif data["url"] in url_dict:
         print "Old URL ->", data["url"]
         url_dict[data["url"]]["view_count"] += 1
+        url_dict[data["url"]]["last_seen"] = int(time.mktime(datetime.now().timetuple()))
+        if last_url != None:
+            view_time = int(time.mktime(datetime.now().timetuple())) - url_dict[last_url]["last_seen"]
+            url_dict[last_url]["view_time_seconds"] += view_time
+            url_dict[last_url]["last_seen"] = int(time.mktime(datetime.now().timetuple()))
+            print last_url, "was viewed", url_dict[last_url]["view_time_seconds"]
+        last_url = data["url"]
 
     # If it's a new site...
     elif data["url"] not in url_dict:
@@ -217,6 +254,16 @@ def handle_brower_action():
     return "ok"
 
 def new_url(url,send_to_client=True):
+    global last_url
+    # Change time of last URL
+    if last_url != None:
+        view_time = int(time.mktime(datetime.now().timetuple())) - url_dict[last_url]["last_seen"]
+        url_dict[last_url]["view_time_seconds"] += view_time
+        url_dict[last_url]["last_seen"] = int(time.mktime(datetime.now().timetuple()))
+        print last_url, "was viewed", url_dict[last_url]["view_time_seconds"]
+
+
+    last_url = url
     print "-- New Page --"
     pid = "page" + str(len(url_dict))
     screen_shot_loc = "screenshots/"+pid+".png"
@@ -227,9 +274,10 @@ def new_url(url,send_to_client=True):
     page = {
             "url":url,
             "screen_shot_url":screen_shot_loc,
-            "view_time_seconds":None,
+            "view_time_seconds":0,
+            "last_seen":int(time.mktime(datetime.now().timetuple())),
             "view_count":1,
-            "classification":"news",
+            "classification":np.random.choice(['news','articles','social','dark web','info','stalker'],1)[0],
             "viewed":True,
             "id":pid,
             "x":None,
@@ -309,24 +357,19 @@ def embed(data):
     Socials = []
     Sites = []
     dSet = set()
-    for (page_obj,text,site_type) in data:
-        if site_type == "TEXT":
-            letters = {}
-            words = word_tokenize(text)
-            for char in words:
-                letters[char] = letters.get(char,0) + 1
-                dSet.add(char)
-            D.append(letters)
-            Sites.append((page_obj,text,site_type))
-        else:
-            Socials.append((page_obj,text,site_type))
-            #print letters
+    for (page_obj,text) in data:
+        letters = {}
+        words = word_tokenize(text)
+        for char in words:
+            letters[char] = letters.get(char,0) + 1
+            dSet.add(char)
+        D.append(letters)
+        Sites.append((page_obj,text))
 
     h = FeatureHasher(n_features=len(dSet))
     f = h.transform(D)
     df = f.toarray()
     real = preprocessing.scale(f.toarray())
-    #print real.shape
 
     pca = PCA(n_components=2)
     vals = pca.fit_transform(real)
@@ -362,24 +405,7 @@ def embed(data):
 
     return map(joinit,zip(Sites,x1,y1))
 
-"""
-{
-            "url":"https://registry.theknot.com/hilary-swab-justin-gawrilow-may-2013-dc/433269",
-            "screen_shot_url":"screenshots/p44.png",
-            "view_time_seconds":15,
-            "view_count":1,
-            "classification":"news",
-            "viewed":false,
-            "id":"p44",
-            "x":14.534,
-            "y":19.345,
-            "relevance_score":0.0
-        }
-"""
 def google_scrape(term):
-
-    # check urls against what the user has already gone to.
-
 
     global urls_to_content
     term = urllib.unquote(term)
@@ -387,57 +413,52 @@ def google_scrape(term):
     urls = []
     for url in search(term, stop=5):
         if url in urls_to_content:
-            urls.append((url,urls_to_content[url],"TEXT"))
+            urls.append((url_dict[url],urls_to_content[url]))
             continue
-        social_media = False
-        for x in social_mappings:
-            if url.startswith(x["urls"][0]):
-                urls.append((url,x["site"],"SOCIAL"))
-                social_media = True
-                break
-        if not social_media:
-            try:
-                pid = "page" + str(len(url_dict))
-                screen_shot_loc = "screenshots/"+pid+".png"
-                text = do_webpage(url,pid,screenshot=False)
+        try:
+            pid = "page" + str(len(url_dict))
+            screen_shot_loc = "screenshots/"+pid+".png"
+            text = do_webpage(url,pid,screenshot=False)
 
-                page = {
-                        "url":url,
-                        "screen_shot_url":screen_shot_loc,
-                        "view_time_seconds":None,
-                        "view_count":0,
-                        "classification":np.random.choice(['news','articles','social','dark web','info','stalker'],1)[0],
-                        "viewed":False,
-                        "id":pid,
-                        "x":None,
-                        "y":None,
-                        "relevance_score":0.5
-                }
+            page = {
+                    "url":url,
+                    "screen_shot_url":screen_shot_loc,
+                    "view_time_seconds":0,
+                    "view_count":0,
+                    "classification":np.random.choice(['news','articles','social','dark web','info','stalker'],1)[0],
+                    "viewed":False,
+                    "id":pid,
+                    "x":None,
+                    "y":None,
+                    "relevance_score":0.5
+            }
 
-                url_dict[url] = page
-                urls.append((page,text,"TEXT"))
-                urls_to_content[url] = text
-            except urllib2.HTTPError:
-                page = {
-                        "url":url,
-                        "screen_shot_url":screen_shot_loc,
-                        "view_time_seconds":None,
-                        "view_count":0,
-                        "classification":np.random.choice(['news','articles','social','dark web','info','stalker'],1)[0],
-                        "viewed":False,
-                        "id":pid,
-                        "x":None,
-                        "y":None,
-                        "relevance_score":0.5
-                }
-                print "ERROR"
-                urls.append((page,"","TEXT"))
-                urls_to_content[url] = text
+            url_dict[url] = page
+            urls.append((page,text))
+            urls_to_content[url] = text
+        except urllib2.HTTPError:
+            print "ERROR on:", url
+            page = {
+                    "url":url,
+                    "screen_shot_url":screen_shot_loc,
+                    "view_time_seconds":0,
+                    "view_count":0,
+                    "classification":np.random.choice(['news','articles','social','dark web','info','stalker'],1)[0],
+                    "viewed":False,
+                    "id":pid,
+                    "x":None,
+                    "y":None,
+                    "relevance_score":0.5
+            }
+            
+            urls.append((page,""))
+            urls_to_content[url] = text
     print "Done Google searching..."
     return urls
 
 if __name__ == "__main__":
-    app.debug=True
+    #app.debug=True
+    context = ('server.crt', 'server.key')
     app.run(threaded=True,
         host="0.0.0.0",
-        port=(5000))
+        port=(5000), ssl_context=context)

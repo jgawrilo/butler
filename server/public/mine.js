@@ -1,7 +1,7 @@
 var socket;
 
 
-var server = "http://localhost:5000/"
+var server = "https://localhost:5000/"
 
 // NAME CALL
 d3.select("#save_name").on("click",function(){

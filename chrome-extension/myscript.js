@@ -1,6 +1,34 @@
 console.log("Loaded myscript.js...");
 console.log(window.location.href);
 
+var waitForVideo = setInterval (checkForElement, 1000);
+
+function checkForElement () {
+    if (window.location.href.startsWith("https://www.instagram.com")) {
+
+    console.log("Instagram!!");
+    var insta_button = document.getElementById("jjdog");
+    if (insta_button == null) {
+        var header = document.getElementsByClassName("_jxp6f")[0];
+        console.log(header);
+        var button = document.createElement("button");
+        button.setAttribute("id","jjdog");
+        button.setAttribute("class","_ah57t _84y62 _rmr7s");
+        button.style.background = "#f038e6";
+        button.textContent = "Butler";
+        button.onclick = function(x){
+            var handle = window.location.href.split("https://www.instagram.com/")[1].replace("/","");
+            console.log(handle);
+            $.get("https://localhost:5000/instagram?handle="+handle,function(resp){
+                console.log(resp);
+            });
+        };
+        header.appendChild(button);
+    }
+
+    }
+}
+
 var count = 0;
 var socket;
 function getParameterByName(name, url) {
@@ -138,20 +166,32 @@ if (document.title.indexOf("YouTube") != -1 ) {
     header.insertBefore(entityTab,header.firstChild);
 }
 
-else if (window.location.href.startsWith("https://www.instagram.com")) {
+//ProfileHeaderCard-name
+
+else if (window.location.href.startsWith("https://twitter.com/")) {
 
     setTimeout(function(){
-        console.log("Instagram!!");
-    var header = document.getElementsByClassName("_jxp6f")[0];
+        console.log("Twitter!!");
+    var header = document.getElementsByClassName("ProfileHeaderCard")[0];
     console.log(header);
     var button = document.createElement("button");
-    button.setAttribute("class","_ah57t _84y62 _rmr7s");
+
+    button.setAttribute("class","user-actions-follow-button btn");
+    button.setAttribute("type","button");
     button.style.background = "#f038e6";
-    button.textContent = "Datafy";
-    header.appendChild(button);
+    button.textContent = "Butler";
+    button.onclick = function(x){
+        var handle = window.location.href.split("https://twitter.com/")[1].replace("/","");
+        console.log(handle);
+        $.get("https://localhost:5000/instagram?handle="+handle);
+    };
+    //header.appendChild(button);
+    header.insertBefore(button, header.childNodes[0]);
+
 },
 1000);
 }
+
 
 else if (window.location.href.startsWith("https://www.google.com/search") ||
     window.location.href.startsWith("https://www.google.com/webhp") ) {
