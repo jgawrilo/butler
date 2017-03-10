@@ -60,32 +60,51 @@ action_count = 0
 
 last_url = None
 
-name = ""
+name = "unknown"
 
 socketIO = SocketIO('localhost', 3000, LoggingNamespace)
 
-success = {"success":True}
+resp = Response(dumps({"success":True}))
+resp.headers['Access-Control-Allow-Origin'] = '*'
+
+# Called when twitter is scraped...
+@app.route('/youtube/', methods=['GET'])
+def handle_youtube():
+    global name
+    print "GET: Youtube"
+    handle = request.args.get("handle")
+    print handle
+    os.system("python mine_youtube.py " + handle + " " + "./saves/"+name+"/")
+    return resp
+
+# Called when twitter is scraped...
+@app.route('/twitter/', methods=['GET'])
+def handle_twitter():
+    global name
+    print "GET: Twitter"
+    handle = request.args.get("handle")
+    print handle
+    os.system("python mine_twitter.py " + handle + " " + "./saves/"+name+"/")
+    return resp
 
 # Called when instagram is scraped...
 @app.route('/instagram/', methods=['GET'])
 def handle_instagram():
+    global name
     print "GET: Instagram"
     handle = request.args.get("handle")
     print handle
-    os.system("python mine_insta.py " + handle)
-    resp = Response(dumps(success))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+    os.system("python mine_insta.py " + handle + " " + "./saves/"+name+"/")
     return resp
 
 
-# Called when a prompt is answered
+# Called when a name is given
 @app.route('/name/', methods=['GET'])
 def handle_name():
     print "GET: Name"
     global name
     name = request.args.get("name")
-    resp = Response(dumps(success))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+    os.system("mkdir -p ./saves/"+name)
     return resp
 
 # Called when a prompt is answered
@@ -93,8 +112,6 @@ def handle_name():
 def handle_answer():
     print "GET: Answer"
     print request.args.get("id"), request.args.get("response")
-    resp = Response(dumps(success))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
 # Called when something is unliked
@@ -102,33 +119,55 @@ def handle_answer():
 def handle_unlike():
     print "GET: Unlike"
     print request.args.get("id")
-    resp = Response(dumps(success))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
 # Called when clear is clicked
 @app.route('/clear/', methods=['GET'])
 def handle_clear():
+    global name, url_dict, terms_hash, socials, urls_to_content, prompts, socials
+    global action_count, last_url
+
+    name = "unknown"
+    url_dict = {}
+    terms_hash = {}
+    urls_to_content = {}
+    prompts = {}
+    socials = {}
+    action_count = 0
+    last_url = None
+
+
     print "GET: Clear"
-    resp = Response(dumps(success))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
 
 # Called when reload is clicked
 @app.route('/reload/', methods=['GET'])
 def handle_reload():
+    global name, url_dict, terms_hash, socials, urls_to_content, prompts, socials
     print "GET: Reload"
-    resp = Response(dumps(success))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+
+    name = request.args.get("name")
+    with codecs.open("./saves/" + name + "/butler_data.json","r",encoding="utf8") as ip:
+        data_dump = loads(ip.read())
+        url_dict = data_dump["urls"]
+        terms_hash = data_dump["terms"]
+        socials = data_dump["social"]
+        urls_to_content = data_dump["urls_to_content"]
+
+    print len(url_dict)
     return resp
 
 # Called when save/export is clicked
 @app.route('/save_export/', methods=['GET'])
 def handle_save():
+    global name
+    global url_dict, terms_hash, socials
+    data_dump = {"urls":url_dict,"terms":terms_hash,"social":socials,"urls_to_content":urls_to_content}
     print "GET: Save"
-    resp = Response(dumps(success))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+    with codecs.open("./saves/" + name + "/butler_data.json","w",encoding="utf8") as output:
+        output.write(dumps(data_dump,indent=2))
+
     return resp
 
 
@@ -139,14 +178,12 @@ def handle_brower_action():
     global last_url
     action_count += 1
 
-    print "LAST URL:", last_url
-
     data = request.form.to_dict()
     date = datetime.utcfromtimestamp(int(data["time"]) / 1000.)
     data["time"] = date.isoformat("T").split(".")[0]
     del data["key"]
 
-    print name, action_count, "POST: Action", data["time"], data["url"]
+    print "NAME:",name, "ACTIONS:", action_count, data["time"], data["url"], "LAST:", last_url
 
     # Fake data stub for now
     if action_count % 5 == 0:
@@ -170,6 +207,7 @@ def handle_brower_action():
         }
         socketIO.emit('prompt',dumps(p))
         prompts[pid] = p
+    # END of stubs ##################
 
 
     # If it's a site or movement we don't care about, do nothing
@@ -183,7 +221,7 @@ def handle_brower_action():
             url_dict[last_url]["last_seen"] = int(time.mktime(datetime.now().timetuple()))
             print last_url, "was viewed", url_dict[last_url]["view_time_seconds"]
         last_url = None
-        return "nothing"
+        return resp
 
     # If it's a social site...
     if any(map(data["url"].startswith,map(lambda x: x["urls"][0],social_mappings))):
@@ -203,7 +241,7 @@ def handle_brower_action():
             socketIO.emit('social_media',dumps(sm))
             socials[sid] = sm
             #new_url(data["url"],False)
-            return "ok"
+            return resp
         else:
             print "Old URL ->", data["url"]
 
@@ -220,7 +258,7 @@ def handle_brower_action():
                 q = data["url"].split("#q=")[1].split("&")[0]
             except IndexError:
                 print "---No search term found---"
-                return "ok"
+                return resp
         print "Query ->", q
         socketIO.emit('google_search',dumps({"url":data["url"],"query":q, "id":"g"+str(action_count)}))
         urls = google_scrape(q)
@@ -231,9 +269,10 @@ def handle_brower_action():
         #self.server.socketIO.emit("dark_search",results)
         print dumps({"data":embedding},indent=2)
         socketIO.emit('page_update',dumps({"data":embedding}))
-        return "ok"
+        return resp
 
 
+    # If it's an old site...
     elif data["url"] in url_dict and url_dict[data["url"]]["viewed"]:
         print "Old URL ->", data["url"]
         if last_url != None:
@@ -243,14 +282,16 @@ def handle_brower_action():
             print last_url, "was viewed", url_dict[last_url]["view_time_seconds"]
         last_url = data["url"]
         new_url(data["url"])
+        return resp
 
     # If it's a new site...
     elif data["url"] not in url_dict or not url_dict[data["url"]]["viewed"]:
         new_url(data["url"])
+        return resp
 
 
     # if we get here, return ok
-    return "ok"
+    return resp
 
 def new_url(url,send_to_client=True):
     global last_url
@@ -462,7 +503,7 @@ def google_scrape(term):
     return urls
 
 if __name__ == "__main__":
-    #app.debug=True
+    app.debug=True
     context = ('server.crt', 'server.key')
     app.run(threaded=True,
         host="0.0.0.0",

@@ -23,7 +23,12 @@
     },
     "permissions": [
         "tabs",
-        "storage"
+        "storage",
+        "webRequest",
+        "webRequestBlocking",
+        "https://*/*"
     ],
-    "options_page": "options.html"
+    "options_page": "options.html",
+    "content_security_policy": "script-src 'self' https://localhost:5000/twitter; object-src 'self'"
+
 }

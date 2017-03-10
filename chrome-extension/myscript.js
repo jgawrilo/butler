@@ -1,7 +1,7 @@
 console.log("Loaded myscript.js...");
 console.log(window.location.href);
 
-var waitForVideo = setInterval (checkForElement, 1000);
+var waitForVideo = setInterval (checkForElement, 2000);
 
 function checkForElement () {
     if (window.location.href.startsWith("https://www.instagram.com")) {
@@ -14,7 +14,7 @@ function checkForElement () {
         var button = document.createElement("button");
         button.setAttribute("id","jjdog");
         button.setAttribute("class","_ah57t _84y62 _rmr7s");
-        button.style.background = "#f038e6";
+        button.style.background = "#000000";
         button.textContent = "Butler";
         button.onclick = function(x){
             var handle = window.location.href.split("https://www.instagram.com/")[1].replace("/","");
@@ -148,22 +148,32 @@ function placeFakeResult(result){
     // <div class="g"><!--m--><div class="rc" data-hveid="34" data-ved="0ahUKEwjZv5uT4oDRAhXL5YMKHVe4DQwQFQgiKAEwAQ"><h3 class="r"><a href="http://www.dipf.de/en/about-us/staff/gawrilow-caterina" onmousedown="return rwt(this,'','','','2','AFQjCNFQODUlhlSARvkQDXjNkxYd4y80Og','seK0YLsMHMShehXCNuFZQA','0ahUKEwjZv5uT4oDRAhXL5YMKHVe4DQwQFggjMAE','','',event)">Gawrilow — German Institute for International Educational Research</a></h3><div class="s"><div><div class="f kv _SWb" style="white-space:nowrap"><cite class="_Rm bc">www.dipf.de › Home › About us › Staff</cite><div class="action-menu ab_ctl"><a class="_Fmb ab_button" href="#" id="am-b1" aria-label="Result details" aria-expanded="false" aria-haspopup="true" role="button" jsaction="m.tdd;keydown:m.hbke;keypress:m.mskpe" data-ved="0ahUKEwjZv5uT4oDRAhXL5YMKHVe4DQwQ7B0IJTAB"><span class="mn-dwn-arw"></span></a><div class="action-menu-panel ab_dropdown" role="menu" tabindex="-1" jsaction="keydown:m.hdke;mouseover:m.hdhne;mouseout:m.hdhue" data-ved="0ahUKEwjZv5uT4oDRAhXL5YMKHVe4DQwQqR8IJjAB"><ol><li class="action-menu-item ab_dropdownitem" role="menuitem"><a class="fl" href="http://webcache.googleusercontent.com/search?q=cache:-Mx5wMIRZl8J:www.dipf.de/en/about-us/staff/gawrilow-caterina+&amp;cd=2&amp;hl=en&amp;ct=clnk&amp;gl=us" onmousedown="return rwt(this,'','','','2','AFQjCNE13CIXuXY3tyDf64P9XFady6-LnA','zLnxRB8Omf5Rvn4XKlcwWA','0ahUKEwjZv5uT4oDRAhXL5YMKHVe4DQwQIAgnMAE','','',event)">Cached</a></li></ol></div></div></div><span class="st">Persönliche Seite Caterina <em>Gawrilow</em>. ... Prof. Dr. Caterina <em>Gawrilow</em>. Function: Associated researcher. <em>Gawrilow</em>@dipf.de&nbsp;...<div>CLICK ME</div></span></div></div></div><!--n--></div>
 }
 
-if (document.title.indexOf("YouTube") != -1 ) {
+
+
+if (window.location.href.startsWith("https://www.youtube.com/watch?v=")) {
     console.log("YouTube!!!");
 
+    setTimeout(function(){
     var header = document.getElementById("watch-headline-title");
+    console.log(header);
     
     var entityTab = document.createElement("div");
     entityTab.setAttribute("class","hdtb-mitem hdtb-imb")
-    var entityLink = document.createElement("a");
-    entityLink.setAttribute("class","q qs");
+    var button = document.createElement("button");
 
-    var video = window.location.href.split("v=")[1]
-    entityLink.setAttribute("href","http://127.0.0.1:8000/polls?video=" + video);
-    entityLink.setAttribute("target","_blank")
-    entityLink.innerHTML = "Entities";
-    entityTab.appendChild(entityLink);
+    button.setAttribute("class","yt-uix-button yt-uix-button-size-default yt-uix-button-default");
+    button.setAttribute("type","button");
+    button.style.background = "#000000";
+    button.style.color="#FFFFFF"
+    button.textContent = "Butler";
+    button.onclick = function(x){
+        var handle = window.location.href.split("https://www.youtube.com/watch?v=")[1].replace("/","");
+        console.log(handle);
+        $.get("https://localhost:5000/youtube?handle="+handle);
+    };
+    entityTab.appendChild(button);
     header.insertBefore(entityTab,header.firstChild);
+},2000);
 }
 
 //ProfileHeaderCard-name
@@ -178,12 +188,12 @@ else if (window.location.href.startsWith("https://twitter.com/")) {
 
     button.setAttribute("class","user-actions-follow-button btn");
     button.setAttribute("type","button");
-    button.style.background = "#f038e6";
+    button.style.background = "#000000";
     button.textContent = "Butler";
     button.onclick = function(x){
         var handle = window.location.href.split("https://twitter.com/")[1].replace("/","");
         console.log(handle);
-        $.get("https://localhost:5000/instagram?handle="+handle);
+        $.get("https://localhost:5000/twitter?handle="+handle);
     };
     //header.appendChild(button);
     header.insertBefore(button, header.childNodes[0]);

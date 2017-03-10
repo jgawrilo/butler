@@ -38,7 +38,8 @@ d3.select("#clear").on("click",function(){
 // RELOAD
 d3.select("#reload").on("click",function(){
     var endpoint = server + "reload/"
-    $.get(endpoint, function(response) {
+    var name = d3.select("#name").node().value;
+    $.get(endpoint, {"name":name}, function(response) {
         var response = JSON.parse(response);
         console.log(response);
         console.log("Either show what files already exist or prompt for the file...")

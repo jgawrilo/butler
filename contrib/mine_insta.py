@@ -22,8 +22,8 @@ headers = {
 
 
 
-def getAccountData(handle):
-    output = codecs.open(handle + ".json","w",encoding="utf8")
+def getAccountData(handle,save_loc):
+    output = codecs.open(save_loc + handle + ".json","w",encoding="utf8")
     images = []
     first_page = requests.get("https://www.instagram.com/" + handle)
     lines = first_page.text.split("\n")
@@ -194,8 +194,9 @@ def getLocationData(ig_location):
 
 if __name__ == "__main__":
     handle = sys.argv[1]
+    save_loc = sys.argv[2]
     #getLocationData("152962574744049")
-    print getAccountData(handle)
+    print getAccountData(handle,save_loc)
 
 
 
