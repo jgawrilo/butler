@@ -1,0 +1,354 @@
+{
+    "profiles":[
+        {
+            "search":"VLADIMIR KUDYAKOV florida",
+            "id":"p1",
+            "score":0.734,
+            "info":{
+                "basic":[
+                    {
+                        "id":"ib1",
+                        "Gender":"Male",
+                        "from":[
+                            "https://www.linkedin.com/in/vladimir-kudyakov-371584a5",
+                            "https://www.corporationwiki.com/p/2ekibg/vladimir-kudyakov"
+                        ]
+                    },
+                    {
+                        "id":"ib1",
+                        "Name":"Vladimir Kudyakov",
+                        "from":[
+                            "https://www.linkedin.com/in/vladimir-kudyakov-371584a5",
+                            "https://www.corporationwiki.com/p/2ekibg/vladimir-kudyakov"
+                        ]
+                    },
+                    {
+                        "id":"ib2",
+                        "Address":"8411 W Oakland Park Blvd Sunrise, FL 33351",
+                        "from":[
+                            "https://www.corporationwiki.com/Florida/Sunrise/8411-W-Oakland-Park-Blvd-Sunrise-FL-33351-a40876441.aspx",
+                            "https://www.bizapedia.com/people/vladimir-kudyakov.html"
+                        ]
+                    },
+                    {
+                        "id":"ib3",
+                        "Address":"1994 E SUNRISE BLVD FORT LAUDERDALE, FL 33304",
+                        "from":[
+                            "https://www.corporationwiki.com/Florida/Sunrise/8411-W-Oakland-Park-Blvd-Sunrise-FL-33351-a40876441.aspx",
+                            "https://www.bizapedia.com/people/vladimir-kudyakov.html"
+                        ]
+                    },
+                    {
+                        "id":"ib10",
+                        "Phone":"1.954.990.4200",
+                        "from":[
+                            "http://www.creditservicesamerica.com/alpha/"
+                        ]
+                    },
+                    {
+                        "id":"ib12",
+                        "Fax":"1.801.847.6969",
+                        "from":[
+                            "http://www.creditservicesamerica.com/alpha/"
+                        ]
+                    }
+                ],
+                "other":[
+                    {
+                        "id":"io1",
+                        "type":"CEO",
+                        "value":"CS-America Op LLC",
+                        "from":[
+                            "https://www.corporationwiki.com/p/2ekibg/vladimir-kudyakov"
+                        ]
+                    },
+                    {
+                        "id":"i02",
+                        "type":"International Consultant",
+                        "value":"Credit Services Of America",
+                        "from":[
+                            "https://www.linkedin.com/in/vladimir-kudyakov-371584a5/"
+                        ]
+                    }
+                ]
+            },
+            "relationships":[
+                {
+                    "id":"r1",
+                    "type":"Connection",
+                    "name":"Nataliya Kirk",
+                    "from":[
+                            "https://www.corporationwiki.com/p/2ekibg/vladimir-kudyakov"
+                        ]
+                },
+                {
+                    "id":"r2",
+                    "type":"Connection",
+                    "name":"Anthony Lawand",
+                    "from":[
+                            "https://www.corporationwiki.com/p/2ekibg/vladimir-kudyakov"
+                        ]
+                },
+                {
+                    "id":"r3",
+                    "type":"Connection",
+                    "name":"Dan Oran",
+                    "from":[
+                            "https://www.corporationwiki.com/p/2ekibg/vladimir-kudyakov"
+                        ]
+                }
+                
+            ],
+            "social_media":[
+                {
+                    "id":"s1",
+                    "type":"LinkedIn",
+                    "username":"ladimir-kudyakov-371584a5",
+                    "name":"Vladimir Kudyakov",
+                    "url":"https://www.linkedin.com/in/vladimir-kudyakov-371584a5/",
+                    "image_url":null,
+                    "from":[
+                        "https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=VLADIMIR+KUDYAKOV+florida&*"
+                    ]
+                },
+                {
+                    "id":"s2",
+                    "type":"YouTube",
+                    "username":"UCOlMqvnkdd0n3u7IT4H83og",
+                    "name":"Vladimir Kudyakov",
+                    "url":"https://www.youtube.com/channel/UCOlMqvnkdd0n3u7IT4H83og",
+                    "image_url":"https://yt3.ggpht.com/-t7t4_oVjcQE/AAAAAAAAAAI/AAAAAAAAAAA/ifWWciRKKjs/s100-c-k-no-mo-rj-c0xffffff/photo.jpg",
+                    "from":[
+                        "https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=VLADIMIR+KUDYAKOV+florida&*"
+                    ]
+                }
+
+            ],
+            "media":[
+                {
+                    "id":"m1",
+                    "type":"video",
+                    "url":"https://www.youtube.com/watch?v=EMy5zuGg0bc",
+                    "from":[
+                        "https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=VLADIMIR+KUDYAKOV+florida&*"
+                    ]
+                },
+                {
+                    "id":"m2",
+                    "type":"image",
+                    "url":"https://lh3.googleusercontent.com/wt3WsHXPDJrv5KgHb5X-BJqy9hvqQREZ1X3lxPLwu_3GlEDYxBH6BY0bbFbAGQJ63VunHWaO9I8dNG4=w782-h440-rw",
+                    "from":[
+                        "https://get.google.com/u/0/albumarchive/109361923898951318368/album/AF1QipM9vgCQFPNSP5k1E1XbLB8wM7WgdHDI_dR5VUl7"
+                    ]
+                }
+                
+            ],
+            "entities":[
+                {
+                    "id":"e1",
+                    "type":"Date",
+                    "value":"February of 2014",
+                    "count":1,
+                    "from":[
+                        "https://www.corporationwiki.com/p/2ekibg/vladimir-kudyakov"
+                    ]
+                },
+                {
+                    "id":"e2",
+                    "type":"Place",
+                    "value":"Fort Lauderdale, Florida",
+                    "count":9,
+                    "from":[
+                        "https://www.linkedin.com/in/vladimir-kudyakov-371584a5/", "https://www.corporationwiki.com/p/2ekibg/vladimir-kudyakov","https://www.bizapedia.com/people/vladimir-kudyakov.html"
+                    ]
+                },
+                {
+                    "id":"e3",
+                    "type":"Place",
+                    "value":"Pembroke Pines, Florida",
+                    "count":9,
+                    "from":[
+                        "http://www.whitepages.com/name/Vladimir-Khudyakov"
+                    ]
+                },
+                {
+                    "id":"e4",
+                    "type":"Place",
+                    "value":"Hollywood, Florida",
+                    "count":9,
+                    "from":[
+                        "http://www.whitepages.com/name/Vladimir-Khudyakov"
+                    ]
+                },
+                {
+                    "id":"e5",
+                    "type":"Organization",
+                    "value":"CS America",
+                    "count":8,
+                    "from":[
+                        "https://www.linkedin.com/in/vladimir-kudyakov-371584a5/"
+                    ]
+                },
+                {
+                    "id":"e6",
+                    "type":"Organization",
+                    "value":"American EB-5 Centers",
+                    "count":8,
+                    "from":[
+                        "https://www.linkedin.com/in/vladimir-kudyakov-371584a5/"
+                    ]
+                },
+                {
+                    "id":"e7",
+                    "type":"Organization",
+                    "value":"Data Business Systems",
+                    "count":8,
+                    "from":[
+                        "https://www.linkedin.com/in/vladimir-kudyakov-371584a5/"
+                    ]
+                }
+            ],
+            "urls":[
+                {
+                    "id":"u1",
+                    "url":"https://www.linkedin.com/in/vladimir-kudyakov-371584a5/"
+                },
+                {
+                    "id":"u2",
+                    "url":"https://www.corporationwiki.com/p/2ekibg/vladimir-kudyakov"
+                },
+                {
+                    "id":"u3",
+                    "url":"http://www.whitepages.com/name/Vladimir-Khudyakov"
+                },
+                {
+                    "id":"u4",
+                    "url":"https://www.bizapedia.com/people/vladimir-kudyakov.html"
+                },
+                {
+                    "id":"u5",
+                    "url":"http://americaneb5centers.com/team/"
+                },
+                {
+                    "id":"u6",
+                    "url":"https://www.youtube.com/watch?v=EMy5zuGg0bc"
+                },
+                {
+                    "id":"u7",
+                    "url":"https://www.arivify.com/property/search/K4MEZKHjt"
+                },
+                {
+                    "id":"u8",
+                    "url":"https://plus.google.com/109361923898951318368"
+                },
+                {
+                    "id":"u9",
+                    "url":"https://www.buildzoom.com/property-info/1933-nw-74-way-pembroke-pines-fl-33024"
+                },
+                {
+                    "id":"u10",
+                    "url":"http://search.sunbiz.org/Inquiry/CorporationSearch/SearchResultDetail?inquirytype=OfficerRegisteredAgentName&directionType=Initial&searchNameOrder=ORANDAN%20L130000412213&aggregateId=flal-l13000041221-985b5cf7-acd1-4d7f-872a-30ff1a2694a3&searchTerm=Oranburg%2C%20Philip%20Reid&listNameOrder=ORANBURGPHILIPREID%20H683070"
+                },
+                {
+                    "id":"u11",
+                    "url":"https://www.google.com/maps/contrib/109361923898951318368/reviews/@26.01637,-80.2106982,13z/data=!3m1!4b1!4m3!8m2!3m1!1e1"
+                }
+            ]
+        },
+        {
+            "search":"VLADIMIR KUDYAKOV florida",
+            "id":"p2",
+            "score":0.321,
+            "info":{
+                "basic":[
+                    {
+                        "id":"ib4",
+                        "Gender":"Male",
+                        "from":[
+                            "http://diydrones.com/profile/VladimirLazyKhudyakov"
+                        ]
+                    },
+                    {
+                        "id":"ib5",
+                        "Name":"Vladimir Lazy Khudyakov",
+                        "from":[
+                            "http://diydrones.com/profile/VladimirLazyKhudyakov"
+                        ]
+                    },
+                    {
+                        "id":"ib6",
+                        "Address":"Warszawa Poland",
+                        "from":[
+                            "http://diydrones.com/profile/VladimirLazyKhudyakov"
+                        ]
+                    }
+                ],
+                "other":[
+                    {
+                        "id":"io3",
+                        "type":"About Me",
+                        "value":"Crash master",
+                        "from":[
+                            "http://diydrones.com/profile/VladimirLazyKhudyakov"
+                        ]
+                    },
+                    {
+                        "id":"i04",
+                        "type":"UAV Interest",
+                        "value":"Diff UAV, using Paparazzy AP",
+                        "from":[
+                            "http://diydrones.com/profile/VladimirLazyKhudyakov"
+                        ]
+                    }
+                ]
+            },
+            "relationships":[
+                {
+                    "id":"r1",
+                    "type":"Friend",
+                    "name":"Mike Pursifull",
+                    "from":[
+                            "http://diydrones.com/profile/VladimirLazyKhudyakov"
+                        ]
+                }
+            ],
+            "social_media":[],
+            "media":[
+                {
+                    "id":"m2",
+                    "type":"image",
+                    "url":"http://content.foto.mail.ru/mail/lazy_66/501/s-517.JPG",
+                    "from":[
+                        "http://diydrones.com/profile/VladimirLazyKhudyakov"
+                    ]
+                }
+            ],
+            "entities":[
+                {
+                    "id":"e8",
+                    "type":"Place",
+                    "value":"Warszawa Poland",
+                    "count":1,
+                    "from":[
+                        "http://diydrones.com/profile/VladimirLazyKhudyakov"
+                    ]
+                },
+                {
+                    "id":"e9",
+                    "type":"Organization",
+                    "value":"DIY Drones",
+                    "count":9,
+                    "from":[
+                        "http://diydrones.com/profile/VladimirLazyKhudyakov"
+                    ]
+                }
+            ],
+            "urls":[
+                {
+                    "id":"u12",
+                    "url":"http://diydrones.com/profile/VladimirLazyKhudyakov"
+                }
+            ]
+        }
+    ]
+}
